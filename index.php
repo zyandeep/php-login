@@ -9,16 +9,26 @@
 	<hr>
 	<p>	
 		<?php
-			if(isset($_GET['new_user'])) {
-				echo "<em>The User has been registered successfully.<em>";
+			if(!empty($_GET['new_user'])) {
+				echo "<em>";
+				echo "The user has been registered successfully";
+				echo "</em>";
 			}
+
+			if(!empty($_GET['error'])) {
+				echo "<strong>";
+				echo "Invalid username and/or password";
+				echo "</strong>";
+			}
+
+			echo empty($empty) ? "" : "<strong>$empty</strong>";
 		?>	
 
 	</p>
 	<br>
 	<br>
 
-	<form method="POST" action="">
+	<form method="POST" action="login_script.php">
 		<fieldset>
 			<legend>Log In</legend>
 			<p>
@@ -32,11 +42,6 @@
 			<p>
 				<input type="submit" name="submit" value="Submit">
 				<input type="reset" value="Reset">
-			</p>
-			<p>
-				<?php 
-					
-				?>
 			</p>
 		</fieldset>
 	</form>

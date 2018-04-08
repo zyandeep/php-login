@@ -1,27 +1,4 @@
-<?php 
-	require 'dbcon.php';
-
-	if(isset($_POST['submit'])) {
-
-		// Validate input
-		// Prevent SQL injection
-		// Prevent XSS
-
-		$username = $_POST['username'];
-		$password = $_POST['password'];
-
-		$sql = "INSERT INTO users(username, password, created_at) VALUES('$username', '$password', NOW())";
-
-		if (mysqli_query($link, $sql)) {
-			header('Location: index.php?new_user=true');
-		}
-		else {
-			$err_msg = "Username already exist";
-		}
-	}
- ?>
-
- <!DOCTYPE html>
+<!DOCTYPE html>
  <html lang="en">
  <head>
  	<meta charset="UTF-8">
@@ -30,28 +7,37 @@
  </head>
  <body>
  	<h2>New User Registration</h2>
+ 	<p>Please fill this form to create an account</p>
  	<hr>
- 	<br>
- 	
- 	<?php 
- 		if (isset($err_msg)) {
- 			echo "<strong>$err_msg</strong>";
- 		}
- 	 ?>
 	<br>
+	<p>
+		<strong>
+			<?php
+				echo empty($empty) ? "" : $empty; 
+				echo isset($name_error) ? $name_error : "";
+				echo isset($pwd_error) ? $pwd_error : "";
+				echo isset($db_error) ? $db_error : "";
+			?>
+		</strong>	
+	</p>
 	<br>
+	
 
- 	<form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+ 	<form method="POST" action="register_script.php">
  		<fieldset>
  			<legend>User Information</legend>
  			<p>
  				<label>Username: </label>
- 				<input type="text" name="username" required="required">
+ 				<input type="text" name="username" required="required" value="<?php echo isset($username) ? $username : "";?>">
  				<span id="username-error"></span>
  			</p>
  			<p>
  				<label>Password: </label>
- 				<input type="password" name="password" required="required">
+ 				<input type="password" name="password" required="required" value="<?php echo isset($password) ? $password : ""; ?>">
+ 			</p>
+ 			<p>
+ 				<label>Confirm Password: </label>
+ 				<input type="password" name="conf-password" required="required" value="<?php echo isset($confirm_password) ? $confirm_password : ""; ?>">
  			</p>
  			<p>
  				<input type="submit" name="submit" value="Submit">
@@ -59,43 +45,13 @@
  			</p>
  		</fieldset>	
  	</form>
+	<br>
+	<br>
+	<p>
+		Already have an account? <a href="index.php">Login Here...</a>
+	</p>
 
-
-
-
-	<!-- For ajax request to verify unique username -->
-	<script>
-
-		$(document).ready(function() {
-			$('[type="text"]').on('input', function() {
-				var data = $(this).val();
-
-				if ((data.trim()).length !== 0) {
-
-					// make an ajax call
-					$.ajax({
-						url: "ajax_name.php",
-						type: "GET",
-						data: {
-							query: data,
-						},
-						success: function(data) {
-							if (data.length > 0) {
-								$('span#username-error').html(data);
-							}
-							else {
-								$('span#username-error').html("");	
-							}
-						},
-						error: function() {
-							alert("Ajax failed!");
-						}
-					});
-				}
-			});
-		});
 	
-	</script>
-
+	<script src="js/ajax.js"></script>
  </body>
  </html>

@@ -1,11 +1,14 @@
 <?php
 
-require 'dbcon.php';
-
-
 if (isset($_GET['query'])) {
 
-	$username = mysqli_real_escape_string($link, $_GET['query']);
+	// Data Validation
+	// SQL Injection Prevention
+	//XSS Prevention
+
+	require_once 'dbcon_script.php';
+	
+	$username = $_GET['query'];
 
 	$sql = "SELECT * FROM users WHERE username='$username'";
 
